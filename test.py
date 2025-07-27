@@ -107,9 +107,9 @@ numCycles = int(params["numCycles"])
 print(f"---------------------------")
 print(f"Starting {numCycles} cycles")
 
-def time_depndendent_etching(etchRate, i, noise_factor = 0.1):
+def time_depndendent_etching(etchRate, i, noise_factor = 0):
     """Adjust the etch rate based on the cycle number."""
-    return etchRate * (1.0 - noise_factor * np.sin(np.pi * i / numCycles))
+    return etchRate * (1.0 - noise_factor * np.cos(np.pi * i / numCycles))
 
 for i in range(numCycles):
 
@@ -121,11 +121,11 @@ for i in range(numCycles):
     def rateFunctionEtch(fluxes, material):
         rate = 0.0
         if material == vps.Material.Mask:
-            rate = fluxes[1] * time_depndendent_etching(ionEtchRateMask, i, 1) + fluxes[0] * neuEtchRateMask
+            rate = fluxes[1] * time_depndendent_etching(ionEtchRateMask, i, 0.4) + fluxes[0] * neuEtchRateMask
         if material == vps.Material.Polymer:
-            rate = fluxes[1] * time_depndendent_etching(ionEtchRatePoly, i, 1) + fluxes[0] * neuEtchRatePoly
+            rate = fluxes[1] * time_depndendent_etching(ionEtchRatePoly, i, 0.4) + fluxes[0] * neuEtchRatePoly
         if material == vps.Material.Si:
-            rate = fluxes[1] * time_depndendent_etching(ionEtchRateSubs, i, 1) + fluxes[0] * neuEtchRateSubs
+            rate = fluxes[1] * time_depndendent_etching(ionEtchRateSubs, i, 0.4) + fluxes[0] * neuEtchRateSubs
         return rate
 
     depoModel.setRateFunction(rateFunctionDep)
